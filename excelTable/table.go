@@ -11,6 +11,7 @@ type ExcelTable struct {
 	rows     map[string]*Rows
 }
 
+// NewExcelTable 获取Excel为一个对象
 func NewExcelTable(fileName string) *ExcelTable {
 	result := &ExcelTable{
 		FileName: fileName,
@@ -20,6 +21,7 @@ func NewExcelTable(fileName string) *ExcelTable {
 	return result
 }
 
+// GetRows 传入sheet，获取它的每一行
 func (s *ExcelTable) GetRows(sheet string) *Rows {
 	if rows, ok := s.rows[sheet]; ok {
 		return rows
@@ -31,10 +33,12 @@ func (s *ExcelTable) GetRows(sheet string) *Rows {
 	}
 }
 
+// GetSheets 获取Excel表中的 sheets名称到数组
 func (s *ExcelTable) GetSheets() []string {
 	return s.file.GetSheetList()
 }
 
+// SaveToFile 保存Excel表到文件
 func (s *ExcelTable) SaveToFile(fileName string) {
 
 	for sheet, row := range s.rows {

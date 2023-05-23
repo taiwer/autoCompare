@@ -6,17 +6,19 @@ type Rows struct {
 	rows [][]string
 }
 
+// TitleIndex 指定表头所在的行数
 const TitleIndex = 2
 
+// GetTitleCellIndex 查找flag在表头行中的位置
 func (s *Rows) GetTitleCellIndex(str string) int {
 	return findIndex(s.rows[TitleIndex], str)
 }
 
-// 获取包含指定标题内容的所有行
+// GetFlagRows 获取包含指定标题内容的所有行
 func (s *Rows) GetFlagRows(flag, value string) ([][]string, error) {
 	index := s.GetTitleCellIndex(flag)
 	if index < 0 {
-		return nil, fmt.Errorf("Not Find Flag <%s>", flag)
+		return nil, fmt.Errorf("not Find Flag <%s>", flag)
 	}
 	var result [][]string
 	for _, v := range s.rows {
@@ -30,17 +32,21 @@ func (s *Rows) GetFlagRows(flag, value string) ([][]string, error) {
 	return result, nil
 }
 
-func (s *Rows) CompareAndGetRows(rows [][]string, count int, newflag string) ([][]string, error) {
+// CompareAndGetRows 两个表的行比较 如果含有comment,则把comment内容带入New表
+func (s *Rows) CompareAndGetRows(rows [][]string, count int, newFlag string) ([][]string, error) {
 	var result [][]string
-	index := s.GetTitleCellIndex(newflag)
+	index := s.GetTitleCellIndex(newFlag)
+
 	if index < 0 {
-		return result, fmt.Errorf("Not find flag %s", newflag)
+		return result, fmt.Errorf("not find flag %s", newFlag)
 	}
 	for _, _vv := range rows {
+		// 新表的表头加上comment
+		_vv[index] = newFlag
 		// 遍历旧表内容
 		for _, v := range s.rows {
 			if compareStrings(v, _vv, count) {
-				_vv = append(_vv, v[index])
+				_vv = append(_vv, v[index]) //如果旧表的row和新表的row相等，则把旧表的comments带入rows的最后
 				result = append(result, _vv)
 				break
 			}

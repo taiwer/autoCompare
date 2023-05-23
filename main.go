@@ -6,7 +6,7 @@ import (
 
 func main() {
 	file2name := "0425.xlsx"
-	file1name := "0425_1.xlsx"
+	file1name := "0425_new.xlsx"
 	excelTable1 := excelTable.NewExcelTable(file1name)
 	excelTable2 := excelTable.NewExcelTable(file2name)
 
